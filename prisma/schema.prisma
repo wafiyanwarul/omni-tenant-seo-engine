@@ -2,26 +2,54 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  output   = "../src/generated/prisma/client"
 }
 
 datasource db {
-  // For local development: SQLite
-  // For production (Supabase): change to "postgresql"
-  provider = "sqlite"
+  // provider will be changed from "sqlite" to "postgresql" in Step 6B
+  provider = "postgresql"
 }
 
 model Company {
-  id          Int      @id @default(autoincrement())
-  name        String
-  slug        String   @unique
-  city        String
-  services    String   // Stored as JSON string, e.g: '["Web Dev","Cloud"]'
-  description String
-  logo_url    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id Int @id @default(autoincrement())
 
+  // --- Core Identity ---
+  name        String
+  slug        String  @unique
+  description String
+  logoUrl     String?
+
+  // --- Location ---
+  province String
+  city     String
+  address  String?
+
+  // --- Contact & Web ---
+  website      String?
+  email        String?
+  phone        String?
+  linkedinUrl  String?
+  instagramUrl String?
+
+  // --- Business Profile ---
+  services      Json
+  foundedYear   Int?
+  employeeCount String?
+  pricingModel  String?
+
+  // --- Directory Metadata ---
+  isVerified     Boolean   @default(false)
+  sourceName     String?
+  sourceUrl      String?
+  lastReviewedAt DateTime?
+
+  // --- Timestamps ---
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // --- Indexes for SEO query performance ---
   @@index([city])
   @@index([slug])
+  @@index([province])
+  @@index([isVerified])
 }
