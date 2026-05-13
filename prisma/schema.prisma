@@ -1,0 +1,27 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  // For local development: SQLite
+  // For production (Supabase): change to "postgresql"
+  provider = "sqlite"
+}
+
+model Company {
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String   @unique
+  city        String
+  services    String   // Stored as JSON string, e.g: '["Web Dev","Cloud"]'
+  description String
+  logo_url    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([city])
+  @@index([slug])
+}
