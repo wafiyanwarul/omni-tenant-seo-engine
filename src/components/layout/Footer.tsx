@@ -1,16 +1,17 @@
 // src/components/layout/Footer.tsx
 import Link from "next/link";
+import { prisma } from "@/lib/prisma";
 import { Zap, MapPin, GitBranch, Globe } from "lucide-react";
 
-const cities = [
-  { label: "Surabaya", href: "/companies/surabaya" },
-  { label: "Malang", href: "/companies/malang" },
-  { label: "Jember", href: "/companies/jember" },
-  { label: "Sidoarjo", href: "/companies/sidoarjo" },
-  { label: "Mojokerto", href: "/companies/mojokerto" },
-];
+export const revalidate = 86400;
 
-export default function Footer() {
+export default async function Footer() {
+  const cities = await prisma.company.findMany({
+    select: { city: true },
+    distinct: ["city"],
+    orderBy: { city: "asc" },
+  });
+
   return (
     <footer className="bg-dark-900 text-slate-400 mt-auto border-t border-dark-700">
       <div className="container-main py-12">
@@ -50,17 +51,17 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
               <MapPin className="w-4 h-4 text-brand-500" />
-              Kota di Jawa Timur
+              Kota Tersedia
             </h3>
             <ul className="space-y-2">
               {cities.map((city) => (
-                <li key={city.href}>
+                <li key={city.city}>
                   <Link
-                    href={city.href}
+                    href={`/companies/${city.city.toLowerCase()}`}
                     className="text-sm text-slate-500 hover:text-brand-400 transition-colors flex items-center gap-1.5 group"
                   >
                     <span className="w-1 h-1 rounded-full bg-brand-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    {city.label}
+                    {city.city}
                   </Link>
                 </li>
               ))}

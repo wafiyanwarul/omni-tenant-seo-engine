@@ -5,6 +5,7 @@ interface LocalBusinessJsonLdProps {
     name: string;
     description: string;
     city: string;
+    province: string;
     slug: string;
     services: string[];
 }
@@ -13,10 +14,15 @@ export default function LocalBusinessJsonLd({
     name,
     description,
     city,
+    province,
     slug,
     services,
 }: LocalBusinessJsonLdProps) {
-    const cityCapitalized = city.charAt(0).toUpperCase() + city.slice(1);
+    const cityCapitalized = city
+        .split(" ")
+        .filter(Boolean)
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
 
     const jsonLd = {
         "@context": "https://schema.org",
@@ -27,7 +33,7 @@ export default function LocalBusinessJsonLd({
         address: {
             "@type": "PostalAddress",
             addressLocality: cityCapitalized,
-            addressRegion: "Jawa Timur",
+            addressRegion: province,
             addressCountry: "ID",
         },
         areaServed: {

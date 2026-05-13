@@ -31,3 +31,25 @@
    Reload env: .env
  ✓ Compiled in 141ms (277 modules)
  ✓ Compiled in 627ms (295 modules)
+ ✓ Compiled in 434ms (277 modules)
+ ✓ Compiled in 261ms (277 modules)
+ ✓ Compiled in 354ms (277 modules)
+ ✓ Compiled in 243ms (277 modules)
+ ✓ Compiled in 295ms (277 modules)
+ ✓ Compiled in 315ms (277 modules)
+ ○ Compiling /companies/[city] ...
+ ✓ Compiled /companies/[city] in 5.1s (608 modules)
+prisma:query SELECT "public"."Company"."id", "public"."Company"."name", "public"."Company"."slug", "public"."Company"."description", "public"."Company"."logoUrl", "public"."Company"."province", "public"."Company"."city", "public"."Company"."address", "public"."Company"."website", "public"."Company"."email", "public"."Company"."phone", "public"."Company"."linkedinUrl", "public"."Company"."instagramUrl", "public"."Company"."services", "public"."Company"."foundedYear", "public"."Company"."employeeCount", "public"."Company"."pricingModel", "public"."Company"."isVerified", "public"."Company"."sourceName", "public"."Company"."sourceUrl", "public"."Company"."lastReviewedAt", "public"."Company"."createdAt", "public"."Company"."updatedAt" FROM "public"."Company" WHERE "public"."Company"."city" ILIKE $1 ORDER BY "public"."Company"."isVerified" DESC, "public"."Company"."name" ASC OFFSET $2
+prisma:query SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."Company"."id" FROM "public"."Company" WHERE "public"."Company"."city" ILIKE $1 OFFSET $2) AS "sub"
+ ✓ Compiled in 2.1s (277 modules)
+ ✓ Compiled in 253ms (277 modules)
+ ✓ Compiled in 208ms (277 modules)
+ ✓ Compiled in 210ms (277 modules)
+ ✓ Compiled in 1877ms (277 modules)
+ ✓ Compiled in 1794ms (277 modules)
+ ✓ Compiled in 522ms (277 modules)
+ ✓ Compiled in 313ms (277 modules)
+ ✓ Compiled in 186ms (277 modules)
+ ✓ Compiled in 258ms (277 modules)
+ ✓ Compiled in 178ms (277 modules)
+ ✓ Compiled in 207ms (277 modules)
