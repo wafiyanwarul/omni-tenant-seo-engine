@@ -1,11 +1,37 @@
 // src/app/companies/[city]/page.tsx
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { MapPin, ArrowLeft, Building2, ChevronRight } from "lucide-react";
+import Link from "next/link";
+
+import type { Metadata } from "next";
 
 // ISR: revalidate every 24 hours
 export const revalidate = 86400;
+
+// Add this function ABOVE generateStaticParams()
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const cityName =
+    params.city.charAt(0).toUpperCase() + params.city.slice(1);
+
+  const count = await prisma.company.count({
+    where: { city: params.city.toLowerCase() },
+  });
+
+  return {
+    title: `${count} Perusahaan IT di ${cityName} | OmniTenant`,
+    description: `Temukan ${count} perusahaan IT terbaik di ${cityName}. Daftar lengkap software house, vendor teknologi, dan konsultan IT di ${cityName}, Jawa Timur.`,
+    openGraph: {
+      title: `Perusahaan IT di ${cityName} — OmniTenant`,
+      description: `Direktori ${count} perusahaan IT di ${cityName}, Jawa Timur.`,
+      type: "website",
+      locale: "id_ID",
+    },
+    alternates: {
+      canonical: `/companies/${params.city}`,
+    },
+  };
+}
 
 // Pre-build all city pages at deploy time
 export async function generateStaticParams() {
