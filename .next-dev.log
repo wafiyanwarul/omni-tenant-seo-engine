@@ -1,0 +1,14 @@
+
+> omni-tenant-seo-engine@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 1682ms
+ ○ Compiling / ...
+ ✓ Compiled / in 2.3s (603 modules)
+ GET / 200 in 2544ms
+ ✓ Compiled in 271ms (277 modules)
