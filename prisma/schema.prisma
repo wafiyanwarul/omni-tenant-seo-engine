@@ -2,11 +2,10 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../src/generated/prisma/client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
-  // provider will be changed from "sqlite" to "postgresql" in Step 6B
   provider = "postgresql"
 }
 
