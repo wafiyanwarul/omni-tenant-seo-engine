@@ -417,16 +417,6 @@ npx tsc --noEmit
 - If Next.js dev breaks on Windows because of `.next` chunk file issues, remove `.next` and start `npm run dev` again
 - Prisma client is generated into `src/generated/prisma`
 
-## Key Files
-
-- [src/app/page.tsx](/c:/Users/MGTI251106/Downloads/Wafiy%20Anwarul/Projects/omni-tenant-seo-engine/src/app/page.tsx)
-- [src/app/companies/[city]/page.tsx](</c:/Users/MGTI251106/Downloads/Wafiy Anwarul/Projects/omni-tenant-seo-engine/src/app/companies/[city]/page.tsx>)
-- [src/app/companies/[city]/[slug]/page.tsx](</c:/Users/MGTI251106/Downloads/Wafiy Anwarul/Projects/omni-tenant-seo-engine/src/app/companies/[city]/[slug]/page.tsx>)
-- [src/components/seo/JsonLd.tsx](/c:/Users/MGTI251106/Downloads/Wafiy%20Anwarul/Projects/omni-tenant-seo-engine/src/components/seo/JsonLd.tsx)
-- [src/lib/prisma.ts](/c:/Users/MGTI251106/Downloads/Wafiy%20Anwarul/Projects/omni-tenant-seo-engine/src/lib/prisma.ts)
-- [prisma/schema.prisma](/c:/Users/MGTI251106/Downloads/Wafiy%20Anwarul/Projects/omni-tenant-seo-engine/prisma/schema.prisma)
-- [prisma/seed.ts](/c:/Users/MGTI251106/Downloads/Wafiy%20Anwarul/Projects/omni-tenant-seo-engine/prisma/seed.ts)
-
 ## AI Handoff Brief
 
 Use this section when continuing with Gemini or Claude.
