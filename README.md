@@ -36,13 +36,13 @@ What is working now:
 - Dynamic metadata with page-specific titles and descriptions
 - Open Graph metadata on detail pages
 - JSON-LD `LocalBusiness` structured data on company pages
-- Prisma integration with local SQLite for development
+- Prisma integration with PostgreSQL for development
 - Seeded example data for five cities in East Java
 
 What is still prototype-level:
 
 - Data is still seeded dummy data
-- Database is still SQLite for local development
+- Database workflow is still prototype-level and uses seeded development records
 - Province filtering is not implemented yet
 - No admin ingestion workflow yet
 - No real verification pipeline for company records yet
@@ -54,8 +54,7 @@ What is still prototype-level:
 - `TypeScript`
 - `Tailwind CSS`
 - `Prisma 7`
-- `SQLite` for local development
-- `@prisma/adapter-better-sqlite3`
+- `PostgreSQL` for development
 - `Lucide React`
 
 ## Architecture Summary
@@ -100,7 +99,7 @@ Already covered:
 
 ### JSON-LD
 
-Each company page renders `LocalBusiness` JSON-LD using [src/components/seo/JsonLd.tsx](/c:/Users/MGTI251106/Downloads/Wafiy%20Anwarul/Projects/omni-tenant-seo-engine/src/components/seo/JsonLd.tsx).
+Each company page renders `LocalBusiness` JSON-LD using [src/components/seo/JsonLd.tsx].
 
 Current schema includes:
 
@@ -129,59 +128,64 @@ That gives you a clean portfolio talking point:
 
 ## Database Model Right Now
 
+The current Prisma schema is now aligned with a richer business directory structure and uses PostgreSQL as the datasource.
+
 Current Prisma model:
 
 ```prisma
 model Company {
-  id          Int      @id @default(autoincrement())
-  name        String
-  slug        String   @unique
-  city        String
-  services    String
-  description String
-  logo_url    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  name          String
+  slug          String   @unique
+  description   String
+  logoUrl       String?
+  province      String
+  city          String
+  address       String?
+  website       String?
+  email         String?
+  phone         String?
+  linkedinUrl   String?
+  instagramUrl  String?
+  services      Json
+  foundedYear   Int?
+  employeeCount String?
+  pricingModel  String?
+  isVerified    Boolean   @default(false)
+  sourceName    String?
+  sourceUrl     String?
+  lastReviewedAt DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@index([city])
   @@index([slug])
+  @@index([province])
+  @@index([isVerified])
 }
 ```
 
-This is good enough for a prototype, but not enough for a production-quality Indonesian business directory.
+This is now a stronger foundation for real Indonesian company data because it includes location, contact, verification/source metadata, and structured services support.
 
 ## Recommended Next Evolution
 
 To make this portfolio heavier and more believable, the project should move from seeded demo content to a real data workflow.
 
-### Phase 1: Make the data model production-ready
+### Phase 1: Harden the data model for real company records
 
-Move away from the minimal `Company` model and support richer indexing fields.
+The current `Company` model already includes richer business metadata. The next step is to keep refining it for real data ingestion and SEO use cases.
 
-Recommended additions:
+Key focus:
 
-- `province`
-- `website`
-- `email`
-- `phone`
-- `address`
-- `foundedYear`
-- `employeeCount`
-- `pricingModel`
-- `isVerified`
-- `sourceName`
-- `sourceUrl`
-- `lastReviewedAt`
-- `tags`
-- `services` as normalized relation or `Json`
-- `logoUrl`
-- `linkedinUrl`
-- `instagramUrl`
+- Keep `province`, `city`, and `slug` optimized for location-based route generation
+- Use `services` as structured `Json` to support SEO keyword grouping
+- Track `isVerified`, `sourceName`, and `sourceUrl` for credibility
+- Preserve `website`, `email`, `phone`, and social links for rich directory content
 
 Strong recommendation:
 
-- Switch from `services: String` to either Prisma `Json` or a normalized `Service` relation
-- Add `province` immediately, because your future UX depends on province-first filtering
+- Keep the schema Postgres-ready and avoid shrinking it back to simple strings
+- Use `province` and service metadata for future filters and landing page clusters
 
 ### Phase 2: Migrate to PostgreSQL
 
@@ -282,32 +286,54 @@ Stronger variant once the database is upgraded:
 
 These are the most important technical next steps, in the correct order:
 
-1. Normalize the schema for real data
-2. Add `province` to the data model
-3. Migrate from SQLite to PostgreSQL
-4. Create a repeatable ingestion workflow for real companies
-5. Add province and service filters
-6. Replace dummy seed data with sourced records
-7. Add a verification/source review layer
+1. Finalize a repeatable ingestion workflow for real company data
+2. Add province-first and service filtering in the UI
+3. Replace dummy seed data with sourced records
+4. Add a verification/source review layer
+5. Add province and city route clustering for stronger SEO
 
 ## Real Data Strategy
 
-For your use case, the most realistic and efficient strategy is not full scraping first.
+This project is now ready to move from seeded demo content to real company data. The best approach is hybrid: collect real company profiles first, then use scraping/enrichment to populate the richer Prisma schema.
 
-Start with a curated dataset:
+Recommended flow:
 
-1. Collect 20 to 50 real IT companies from major Java cities
-2. Save source URLs for every record
-3. Manually normalize names, cities, services, and descriptions
-4. Import them into Postgres
-5. Only after the schema is stable, automate enrichment
+1. Identify 20-50 real IT and digital service companies from major Indonesian cities.
+2. Capture the public source URL for every company: official website, Google Business listing, LinkedIn company page, local directory, or portfolio site.
+3. Normalize the data into the schema fields:
+   - `name`, `slug`, `province`, `city`, `address`
+   - `website`, `email`, `phone`, `linkedinUrl`, `instagramUrl`
+   - `services` as structured JSON
+   - `description`, `foundedYear`, `employeeCount`, `pricingModel`
+   - `sourceName`, `sourceUrl`, `isVerified`, `lastReviewedAt`
+4. Import the curated records into Postgres using Prisma.
+5. After the model is stable, automate enrichment and scraping for additional company fields.
 
-Why this is better:
+Why this works best for your Upwork portfolio:
 
-- Faster to reach a believable portfolio state
-- Lower legal and technical risk
-- Easier to keep data quality high
-- Better for AI-assisted continuation
+- You can showcase real business data instead of placeholder content
+- Every record carries a source and verification flag for credibility
+- It makes the SEO story stronger because data is tied to actual company pages
+- You can later talk about the ingestion pipeline, not just static seed data
+
+### Scraping Guidance
+
+Use scraping carefully and only for public directory information. Good sources include:
+
+- Official company websites
+- Local business directories
+- Google Maps / Google Business profiles
+- LinkedIn and company social profiles
+- Tech news or agency listing pages
+
+Important note:
+
+- Track `sourceUrl` and `sourceName` for each record
+- Mark `isVerified = false` until you manually confirm the business details
+- Avoid collecting private or sensitive personal data
+- Keep the first batch focused on quality over volume
+
+This approach gives you a powerful story: a Postgres-backed SEO directory with real Indonesian company data, enriched from web sources and ready to show off on Upwork.
 
 ## Suggested Future Schema Direction
 
@@ -418,13 +444,13 @@ Current state:
 - Dynamic metadata implemented
 - Open Graph implemented
 - JSON-LD LocalBusiness implemented and validated
-- Prisma 7 working locally with SQLite
+- Prisma 7 working locally with PostgreSQL
 - Dummy seeded company data for East Java
 
 Immediate priorities:
 1. Upgrade schema for real business records
 2. Add province support
-3. Migrate SQLite to PostgreSQL or Supabase
+3. Finalize Postgres/Supabase database workflow
 4. Design a clean ingestion workflow for real Indonesian IT company data
 5. Add filters for province, city, and service
 
